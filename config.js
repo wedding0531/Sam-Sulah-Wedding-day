@@ -18,7 +18,7 @@ const CONFIG = {
 
   // ── 메인 (히어로) ──
    groom: {
-    name: "샘 카스카트",
+    name: "샘",
     nameEn: "Groom",
     father: "데이비드 카스카트",
     mother: "파멜라 카스카트",
@@ -27,7 +27,7 @@ const CONFIG = {
   },
 
   bride: {
-    name: "이슬아",
+    name: "슬아",
     nameEn: "Bride",
     father: "이희삼",
     mother: "김명애",
