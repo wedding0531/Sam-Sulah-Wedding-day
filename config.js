@@ -51,7 +51,7 @@ const CONFIG = {
 // ── 식당 정보 (새로 추가) ──
   restaurant: {
     title: "피로연 장소 안내",
-    name: "솔라고 호텔 명동점",
+    name: "솔라고 호텔 명동점 2층",
     address: "서울 중구 충무로4가 308",
     tel: "주차장이 협소하여 대중교통 이용 권장드립니다.",
     mapImg: "images/restaurant/1.jpg", 
