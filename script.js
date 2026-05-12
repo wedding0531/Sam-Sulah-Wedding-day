@@ -32,41 +32,45 @@
     return new Date(`${CONFIG.wedding.date}T${CONFIG.wedding.time}:00`);
   }
 
-  /* ═══════════════════════════════════════════
-     Image Auto-Detection
+/* ═══════════════════════════════════════════
+     디버깅 강화 버전 (무엇이 문제인지 화면에 띄웁니다)
      ═══════════════════════════════════════════ */
 
-  function loadImagesFromFolder(folder, maxAttempts = 50) {
-    return new Promise(resolve => {
-        const images = [];
-        let current = 1;
-        let consecutiveFails = 0;
-
-        function tryNext() {
-            if (current > maxAttempts || consecutiveFails >= 3) {
-                resolve(images);
-                return;
-            }
-            const img = new Image();
-            const path = `images/${folder}/${current}.jpg`;
-            img.onload = function() {
-                images.push(path);
-                consecutiveFails = 0;
-                current++;
-                tryNext();
-            };
-            img.onerror = function() {
-                consecutiveFails++;
-                current++;
-                tryNext();
-            };
-            img.src = path;
+  async function loadImagesFromFolder(folder, max = 20) {
+    const images = [];
+    const extensions = ['jpg', 'png', 'jpeg', 'JPG', 'PNG', 'JPEG'];
+    
+    // 첫 번째 사진(1번)을 찾을 수 있는지 테스트
+    let testFound = false;
+    
+    for (let i = 1; i <= max; i++) {
+      let foundInThisNum = false;
+      for (const ext of extensions) {
+        const path = `./images/${folder}/${i}.${ext}`;
+        try {
+          const res = await fetch(path, { method: 'HEAD' });
+          if (res.ok) {
+            images.push(path);
+            foundInThisNum = true;
+            testFound = true;
+            break;
+          }
+        } catch (e) {
+          // 보안 오류(CORS) 발생 시 안내
+          const grid = document.querySelector('#galleryGrid');
+          if(grid) grid.innerHTML = '<p style="color:red;">보안 오류: 서버(Live Server)를 통해 실행해주세요.</p>';
+          return [];
         }
-
-        tryNext();
-    });
+      }
+      if (!foundInThisNum) break; // 숫자가 끊기면 중단
+    }
+    
+    if (!testFound) {
+      console.error(`${folder} 폴더에서 1번 사진을 찾을 수 없습니다.`);
+    }
+    
+    return images;
   }
-
   /* ═══════════════════════════════════════════
      Toast
      ═══════════════════════════════════════════ */
@@ -414,7 +418,7 @@
      ═══════════════════════════════════════════ */
 
   function initStory(storyImages) {
-    $('#storyTitle').textContent = CONFIG.story.title;
+
     $('#storyContent').textContent = CONFIG.story.content;
 
     const container = $('#storyPhotos');
@@ -438,26 +442,23 @@
      Gallery Section
      ═══════════════════════════════════════════ */
 
-  function initGallery(galleryImages) {
-    const grid = $('#galleryGrid');
-    // Remove loading placeholder if present
-    const placeholder = grid.querySelector('.loading-placeholder');
-    if (placeholder) placeholder.remove();
-
-    if (galleryImages.length === 0) {
-      // Hide gallery section if no images found
-      const gallerySection = $('#gallery');
-      if (gallerySection) gallerySection.style.display = 'none';
+function initGallery(images) {
+    const container = $('#galleryGrid');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    if (images.length === 0) {
+      container.innerHTML = '<p class="no-data">등록된 사진이 없습니다.</p>';
       return;
     }
 
-    galleryImages.forEach((src, i) => {
-      const div = document.createElement('div');
-      div.className = 'gallery__item animate-item';
-      div.setAttribute('data-animate', 'scale-in');
-      div.innerHTML = `<img src="${src}" alt="갤러리 사진 ${i + 1}" loading="lazy">`;
-      div.addEventListener('click', () => openPhotoModal(galleryImages, i));
-      grid.appendChild(div);
+    images.forEach((src, idx) => {
+      const item = document.createElement('div');
+      item.className = 'gallery__item animate-item';
+      item.setAttribute('data-animate', 'fade-up');
+      item.innerHTML = `<img src="${src}" alt="Gallery ${idx + 1}" loading="lazy">`;
+      item.onclick = () => openPhotoModal(images, idx);
+      container.appendChild(item);
     });
   }
 
@@ -719,47 +720,54 @@ function initRestaurant() {
     mutObs.observe(document.body, { childList: true, subtree: true });
   }
 
-  /* ═══════════════════════════════════════════
-     Init
+/* ═══════════════════════════════════════════
+     Init (최종 통합본)
      ═══════════════════════════════════════════ */
 
   async function init() {
-    setMetaTags();
-    initCurtain();
-    initHero();
-    initCountdown();
-    initGreeting();
-    initCalendar();
+    try {
+      // 1. 기본 설정 및 메타태그
+      if (typeof setMetaTags === 'function') setMetaTags();
+      
+      // 2. 각 섹션 초기화
+      initCurtain();
+      initHero();
+      initCountdown();
+      initGreeting();
+      if (typeof initCalendar === 'function') initCalendar();
+      
+      showLoadingPlaceholders();
+      initPhotoModal();
+      initLocation();
+      initRestaurant();
+      initAccounts();
+      initFooter();
+      initScrollAnimations();
 
-    // Show loading placeholders while detecting images
-    showLoadingPlaceholders();
+      // 3. 갤러리 사진 로드 (가장 핵심)
+      // 변수 이름 꼬임을 방지하기 위해 단독으로 선언합니다.
+      const images = await loadImagesFromFolder('gallery');
+      
+      console.log("찾은 이미지 개수:", images.length); // 브라우저 콘솔(F12)에서 확인 가능
 
-    // Init sections that don't depend on image detection
-    initPhotoModal();
-    initLocation();
-    initRestaurant();
-    initAccounts();
-    initFooter();
-    initScrollAnimations();
+      // 4. 화면에 그리기
+      if (images && images.length > 0) {
+        initGallery(images);
+      } else {
+        // 사진이 0개일 때의 처리
+        const grid = $('#galleryGrid');
+        if (grid) grid.innerHTML = '<p class="no-data">images/gallery 폴더에 1.jpg 파일이 있는지 확인해주세요.</p>';
+      }
 
-    // Set story text immediately (photos load async)
-    $('#storyTitle').textContent = CONFIG.story.title;
-    $('#storyContent').textContent = CONFIG.story.content;
-
-    // Auto-detect story and gallery images in parallel
-    const [storyImages, galleryImages] = await Promise.all([
-      loadImagesFromFolder('story'),
-      loadImagesFromFolder('gallery')
-    ]);
-
-    // Render sections with discovered images
-    initStory(storyImages);
-    initGallery(galleryImages);
+    } catch (error) {
+      console.error("초기화 중 오류 발생:", error);
+    }
   }
 
+  // 실행
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
   }
-})();
+})(); // 파일 맨 마지막의 괄호 닫기 확인
