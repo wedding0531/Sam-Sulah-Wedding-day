@@ -571,6 +571,31 @@
   }
 
   /* ═══════════════════════════════════════════
+     Restaurant Section
+     ═══════════════════════════════════════════ */
+
+function initRestaurant() {
+    const r = CONFIG.restaurant;
+    if (!r || !$('#restaurantSection')) return; // 섹션이 없으면 실행 안 함
+
+    // 식당 정보 입력
+    const resSection = $('#restaurantSection');
+    $('#resTitle', resSection).textContent = r.title;
+    $('#resName', resSection).textContent = r.name;
+    $('#resAddress', resSection).textContent = r.address;
+    $('#resTel', resSection).textContent = r.tel ? `Tel. ${r.tel}` : '';
+    $('#resMapImg', resSection).src = r.mapImg;
+    $('#resKakaoBtn', resSection).href = r.mapLinks.kakao || '#';
+    $('#resNaverBtn', resSection).href = r.mapLinks.naver || '#';
+
+    $('#copyResAddressBtn', resSection).onclick = () => {
+      copyToClipboard(r.address, '식당 주소가 복사되었습니다');
+    };
+  }
+
+
+
+  /* ═══════════════════════════════════════════
      Account Section (축의금)
      ═══════════════════════════════════════════ */
 
@@ -712,6 +737,7 @@
     // Init sections that don't depend on image detection
     initPhotoModal();
     initLocation();
+    initRestaurant();
     initAccounts();
     initFooter();
     initScrollAnimations();

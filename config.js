@@ -48,7 +48,18 @@ const CONFIG = {
     }
   },
   
-
+// ── 식당 정보 (새로 추가) ──
+  restaurant: {
+    title: "피로연 장소 안내",
+    name: "솔라고 호텔 명동점",
+    address: "서울 중구 충무로4가 308",
+    tel: "02-2263-7979",
+    mapImg: "images/restaurant/1.jpg", 
+    mapLinks: {
+      kakao: "https://place.map.kakao.com/1555302767", 
+      naver: "https://naver.me/x0UPjjrq"
+    }
+  },
   // ── 인사말 ──
   greeting: {
     title: "소중한 분들을 초대합니다",

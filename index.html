@@ -163,6 +163,32 @@
       </div>
     </section>
 
+    <section class="section restaurant-info" id="restaurantSection">
+  <div class="section__inner">
+    <h2 class="section__title animate-item" data-animate="fade-up" id="resTitle">피로연 안내</h2>
+    
+    <div class="location__info animate-item" data-animate="fade-up">
+      <p class="location__venue" id="resName"></p>
+      <p class="location__address" id="resAddress"></p>
+      <p class="location__tel" id="resTel"></p>
+    </div>
+
+    <button class="btn btn--text location__copy animate-item" data-animate="fade-up" id="copyResAddressBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      주소 복사
+    </button>
+
+    <div class="location__map animate-item" data-animate="scale-in">
+      <img class="location__map-img" id="resMapImg" src="" alt="식당 약도" loading="lazy">
+    </div>
+
+    <div class="location__links animate-item" data-animate="fade-up">
+      <a class="btn btn--kakao" id="resKakaoBtn" href="#" target="_blank" rel="noopener">카카오맵</a>
+      <a class="btn btn--naver" id="resNaverBtn" href="#" target="_blank" rel="noopener">네이버지도</a>
+    </div>
+  </div>
+</section>
+
     <!-- ─── Account Section (축의금) ─── -->
     <section class="section account" id="account">
       <div class="section__inner">
