@@ -561,7 +561,7 @@ function initGallery(images) {
     $('#locationVenue').textContent = w.venue;
     $('#locationHall').textContent = w.hall;
     $('#locationAddress').textContent = w.address;
-    $('#locationTel').textContent = w.tel ? `Tel. ${w.tel}` : '';
+    $('#locationTel').textContent = w.tel ? ` ${w.tel}` : '';
     $('#locationMapImg').src = 'images/location/1.jpg';
     $('#kakaoMapBtn').href = w.mapLinks.kakao || '#';
     $('#naverMapBtn').href = w.mapLinks.naver || '#';
@@ -584,7 +584,7 @@ function initRestaurant() {
     $('#resTitle', resSection).textContent = r.title;
     $('#resName', resSection).textContent = r.name;
     $('#resAddress', resSection).textContent = r.address;
-    $('#resTel', resSection).textContent = r.tel ? `Tel. ${r.tel}` : '';
+    $('#resTel', resSection).textContent = r.tel ? ` ${r.tel}` : '';
     $('#resMapImg', resSection).src = r.mapImg;
     $('#resKakaoBtn', resSection).href = r.mapLinks.kakao || '#';
     $('#resNaverBtn', resSection).href = r.mapLinks.naver || '#';
