@@ -41,7 +41,7 @@ const CONFIG = {
     venue: "남산골 한옥마을",
     hall: "관훈동 민씨가옥",
     address: "서울특별시 중구 필동2가 84-1",
-    tel: "02-6358-5533",
+    tel: "주차장이 협소하여 대중교통 이용 권장드립니다.",
     mapLinks: {
       kakao: "https://kko.to/xwalUPalgH",
       naver: "https://naver.me/5gFg3FmY"
@@ -53,7 +53,7 @@ const CONFIG = {
     title: "피로연 장소 안내",
     name: "솔라고 호텔 명동점",
     address: "서울 중구 충무로4가 308",
-    tel: "02-2263-7979",
+    tel: "주차장이 협소하여 대중교통 이용 권장드립니다.",
     mapImg: "images/restaurant/1.jpg", 
     mapLinks: {
       kakao: "https://place.map.kakao.com/1555302767", 
